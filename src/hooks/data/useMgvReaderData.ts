@@ -2,9 +2,8 @@ import { MarketParams, OLKey } from '@mangrovedao/mgv';
 import { useMgvReaderContract } from '../contracts/useMgvReader';
 import { useMemo } from 'react';
 import { formatOffersToArray } from '../formatters/formatOffers';
-import { filterUseConfigInfo } from '../formatters/formatConfig';
+import { filterUseConfigInfo, ParsedConfig } from '../formatters/formatConfig';
 import { ConfigInfoResult } from '@/types/common';
-import { UseReadContractReturnType } from 'wagmi';
 
 export interface UseMarketsDataOptions {
     withConfig?: boolean;
@@ -78,25 +77,27 @@ export const useOfferListData = (market: MarketParams, maxOffers: bigint) => {
     };
 };
 
-export const useMarketConfig = (market: MarketParams) => {
+export const useMarketConfig = (
+    market: MarketParams | null
+): { asks: ParsedConfig | undefined; bids: ParsedConfig | undefined } => {
     const { useConfigInfo } = useMgvReaderContract();
 
     const { data: asksLocalConfig }: { data: ConfigInfoResult | undefined } = useConfigInfo({
-        outbound_tkn: market.base.address,
-        inbound_tkn: market.quote.address,
-        tickSpacing: market.tickSpacing,
+        outbound_tkn: market?.base.address,
+        inbound_tkn: market?.quote.address,
+        tickSpacing: market?.tickSpacing,
     } as OLKey);
 
     const { data: bidsLocalConfig }: { data: ConfigInfoResult | undefined } = useConfigInfo({
-        outbound_tkn: market.quote.address,
-        inbound_tkn: market.base.address,
-        tickSpacing: market.tickSpacing,
+        outbound_tkn: market?.quote.address,
+        inbound_tkn: market?.base.address,
+        tickSpacing: market?.tickSpacing,
     } as OLKey);
 
     if (!asksLocalConfig || !bidsLocalConfig) {
         return {
-            asks: [],
-            bids: [],
+            asks: undefined,
+            bids: undefined,
         };
     }
     const asksParsed = filterUseConfigInfo(asksLocalConfig);

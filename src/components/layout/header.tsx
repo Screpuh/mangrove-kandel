@@ -3,9 +3,11 @@ import { useWallet } from '@/hooks/wallet/useWallet';
 import { Loader2 } from 'lucide-react';
 import { formatEther } from 'viem';
 import { Button } from '../ui/button';
+import { useMangrove } from '@/hooks/contracts/useMangrove';
 
 export default function HeaderComponent() {
     const {
+        address,
         isConnected,
         displayName,
         formattedAddress,
@@ -19,11 +21,10 @@ export default function HeaderComponent() {
         connectors,
         isLoading,
     } = useWallet();
+    const { useBalanceOf, fund } = useMangrove();
+    const { data: mangroveBalance, isLoading: isMangroveBalanceLoading } = useBalanceOf(address!);
 
     const metaMaskConnector = connectors.find((connector) => connector.name === 'MetaMask');
-
-    const isMangroveBalanceLoading = false; // Placeholder for mangrove balance loading state
-    const mangroveBalance = null; // Placeholder for mangrove balance
 
     return (
         <header className="w-full bg-white shadow-sm border-b">
@@ -41,12 +42,12 @@ export default function HeaderComponent() {
 
                         {/* Address and Balance */}
                         <div className="flex items-center space-x-3">
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-gray-600 pl-2">
                                 <span>{displayName || formattedAddress}</span>
                             </div>
 
                             {/* Balance */}
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-gray-500 pl-2">
                                 {isBalanceLoading ? (
                                     <div className="flex items-center">
                                         <Loader2 className="h-3 w-3 animate-spin mr-1" />
@@ -63,7 +64,7 @@ export default function HeaderComponent() {
                             </div>
 
                             {/* Mangrove Balance */}
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-gray-500 pl-2">
                                 {isMangroveBalanceLoading ? (
                                     <div className="flex items-center">
                                         <Loader2 className="h-3 w-3 animate-spin mr-1" />
@@ -71,15 +72,15 @@ export default function HeaderComponent() {
                                     </div>
                                 ) : mangroveBalance ? (
                                     <span>
-                                        {Number(formatEther(mangroveBalance.valueOf())).toFixed(4)}{' '}
-                                        MGV Balance
+                                        {Number(formatEther(BigInt(mangroveBalance))).toFixed(4)}{' '}
+                                        Eth Allowance
                                     </span>
                                 ) : (
                                     <div>
-                                        <span>0 MGV Balance</span>
-                                        {/* <Button onClick={() => fund()} variant="outline" size="sm">
-                                            Add 1 MGV
-                                        </Button> */}
+                                        <span>0 Allowance</span>
+                                        <Button onClick={() => fund()} variant="outline" size="sm">
+                                            Add 1 Eth
+                                        </Button>
                                     </div>
                                 )}
                             </div>

@@ -43,8 +43,9 @@ export const useKandelStore = () => {
     return { ...store, status };
 };
 
-export const useFormattedKandelOffers = (market: MarketParams) => {
+export const useFormattedKandelOffers = (market: MarketParams | null) => {
     const { status } = useKandelStore();
+    if (!status || !market) return { formattedBids: [], formattedAsks: [] };
 
     const formatSide = (offers: OfferParsed[] | undefined, ba: BA) =>
         (offers ?? [])
@@ -62,7 +63,7 @@ export const useFormattedKandelOffers = (market: MarketParams) => {
             });
 
     return {
-        formattedBids: formatSide(status?.bids, 'bids'),
-        formattedAsks: formatSide(status?.asks, 'asks'),
+        formattedBids: formatSide(status?.bids, 'bids' as BA),
+        formattedAsks: formatSide(status?.asks, 'asks' as BA),
     };
 };

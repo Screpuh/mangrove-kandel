@@ -11,7 +11,7 @@ import { useCallback } from 'react';
 
 import { currentChain, getContractAddresses } from '@/lib/wagmi-config';
 
-export default function useKandelManager(market: MarketParams) {
+export default function useKandelManager(market: MarketParams | null) {
     const { address: user } = useAccount();
     // Setup viem clients
     const publicClient = createPublicClient({
@@ -29,7 +29,10 @@ export default function useKandelManager(market: MarketParams) {
     const mgvReader = contractAddresses?.mgvReader as `0x${string}`;
 
     const connectToKandel = useCallback(
-        (kandelAddress: `0x${string}`) => {
+        (kandelAddress: `0x${string}` | null) => {
+            if (!market || !kandelAddress) {
+                throw new Error('Market and Kandel address must be provided');
+            }
             return publicClient.extend(
                 kandelActions(
                     {
@@ -60,7 +63,13 @@ export default function useKandelManager(market: MarketParams) {
     );
 
     const populateKandel = useCallback(
-        async (kandelAddress: `0x${string}`, validKandelParams: ValidateParamsResult) => {
+        async (
+            kandelAddress: `0x${string}` | null,
+            validKandelParams: ValidateParamsResult | null
+        ) => {
+            if (!kandelAddress || !validKandelParams || !user) {
+                throw new Error('Kandel address, valid parameters, and user must be provided');
+            }
             const kandel = connectToKandel(kandelAddress);
 
             const { request } = await kandel.simulatePopulate({
@@ -68,7 +77,10 @@ export default function useKandelManager(market: MarketParams) {
                 account: user,
             });
 
-            const txHash = await walletClient.writeContract(request);
+            const txHash = await walletClient.writeContract({
+                ...request,
+                account: user ?? null,
+            });
 
             const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
@@ -88,14 +100,17 @@ export default function useKandelManager(market: MarketParams) {
                 const kandel = connectToKandel(kandelAddress);
 
                 const { request } = await kandel.simulateRetract({
-                    toIndex: pricePoints,
+                    toIndex: BigInt(pricePoints),
                     baseAmount, // optional
                     quoteAmount, // optional
-                    recipient: user, // can be same as account
+                    recipient: user || ('' as `0x${string}`), // can be same as account
                     account: user,
                 });
 
-                const txHash = await walletClient.writeContract(request);
+                const txHash = await walletClient.writeContract({
+                    ...request,
+                    account: user ?? null,
+                });
                 const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
                 return receipt;

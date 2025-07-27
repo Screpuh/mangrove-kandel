@@ -1,7 +1,7 @@
 import { ConfigInfoResult } from '@/types/common';
 import { GlobalConfig, LocalConfig } from '@mangrovedao/mgv';
 
-type ParsedConfig = {
+export type ParsedConfig = {
     global: GlobalConfig;
     local: LocalConfig;
 };

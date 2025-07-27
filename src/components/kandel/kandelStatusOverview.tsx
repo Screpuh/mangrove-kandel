@@ -11,12 +11,10 @@ import { useTokensContract } from '@/hooks/contracts/useTokens';
 export default function KandelStatusOverview({
     status,
     market,
-    onFund,
     onRetract,
 }: {
     status: GetKandelStateResult | undefined;
     market: MarketParams | null;
-    onFund: () => void;
     onRetract: (
         kandelAddress: `0x${string}`,
         pricePoints: number,
@@ -89,13 +87,20 @@ export default function KandelStatusOverview({
                         </div>
                     </div>
 
-                    <button
-                        className="w-full mt-2 bg-green-500 hover:bg-green-600 text-white text-xs py-1.5 px-3 rounded transition-colors"
-                        onClick={() =>
-                            approveTokens(market.base.address, selected, '1', market.base.decimals)
-                        }>
-                        Approve 1 {baseSymbol}
-                    </button>
+                    {selected && (
+                        <button
+                            className="w-full mt-2 bg-green-500 hover:bg-green-600 text-white text-xs py-1.5 px-3 rounded transition-colors"
+                            onClick={() =>
+                                approveTokens(
+                                    market.base.address,
+                                    selected,
+                                    '1',
+                                    market.base.decimals
+                                )
+                            }>
+                            Approve 1 {baseSymbol}
+                        </button>
+                    )}
                 </div>
 
                 <div className="border border-purple-200 rounded-lg p-3 bg-purple-50">
@@ -135,18 +140,20 @@ export default function KandelStatusOverview({
                         </div>
                     </div>
 
-                    <button
-                        className="w-full mt-2 bg-green-500 hover:bg-green-600 text-white text-xs py-1.5 px-3 rounded transition-colors"
-                        onClick={() =>
-                            approveTokens(
-                                market.quote.address,
-                                selected,
-                                '10000', // human-readable
-                                market.quote.decimals
-                            )
-                        }>
-                        Approve 10000 usd
-                    </button>
+                    {selected && (
+                        <button
+                            className="w-full mt-2 bg-green-500 hover:bg-green-600 text-white text-xs py-1.5 px-3 rounded transition-colors"
+                            onClick={() =>
+                                approveTokens(
+                                    market.quote.address,
+                                    selected,
+                                    '10000', // human-readable
+                                    market.quote.decimals
+                                )
+                            }>
+                            Approve 10000 usd
+                        </button>
+                    )}
                 </div>
             </div>
 

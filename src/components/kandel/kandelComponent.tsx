@@ -17,7 +17,6 @@ import { Button } from '../ui/button';
 export default function KandelComponent() {
     // get stores
     const { kandels, selected, selectKandel, status } = useKandelStore();
-    console.log('kandel status', status);
     const {
         updateFormField,
         validation: result,
@@ -113,7 +112,6 @@ export default function KandelComponent() {
                             <KandelStatusOverview
                                 market={market}
                                 status={status}
-                                onFund={() => {}}
                                 onRetract={retractKandel}
                             />
                         )}

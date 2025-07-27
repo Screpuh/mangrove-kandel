@@ -1,44 +1,41 @@
+import { FormattedOrder } from '@/types/common';
+import { MarketParams } from '@mangrovedao/mgv';
 import { BA } from '@mangrovedao/mgv/lib';
 
 export const KandelOrderPreviewTable = ({
     asks,
     bids,
-    market,
 }: {
-    asks: { price: number; volume: number; type: BA }[];
-    bids: { price: number; volume: number; type: BA }[];
-    market: any;
+    asks: FormattedOrder[];
+    bids: FormattedOrder[];
+    market: MarketParams | null;
 }) => (
     <div className="mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
                 <p>Asks: ({asks.length})</p>
-                <OrderTable offers={asks} market={market} />
+                <OrderTable offers={asks} />
             </div>
             <div>
                 <p>Bids: ({bids.length})</p>
-                <OrderTable offers={bids} market={market} />
+                <OrderTable offers={bids} />
             </div>
         </div>
     </div>
 );
 
-export const OrderTable = ({
-    offers,
-}: {
-    offers: { price: number; volume: number; type: BA }[];
-}) => {
-    const formatPrice = (price) => price.toFixed(2);
-    const formatVolume = (volume) => volume.toFixed(2);
+export const OrderTable = ({ offers }: { offers: FormattedOrder[] }) => {
+    const formatPrice = (price: number) => price.toFixed(2);
+    const formatVolume = (volume: number) => volume.toFixed(2);
 
     return (
         <div>
             <div className="space-y-2">
-                {offers.map((order) => {
+                {offers.map((order, key) => {
                     if (!order.price || !order.volume) return null;
                     return (
                         <div
-                            key={order.id}
+                            key={key}
                             className="flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm">
                             <div className="flex items-center gap-3">
                                 <span

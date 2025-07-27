@@ -18,7 +18,7 @@ export const KandelActionButtons = ({ onPopulate }: { onPopulate: () => void }) 
             setMessage('Success: Kandel populated!');
             onPopulate();
         } catch (err) {
-            setMessage(`Error: ${err.message || 'Failed to populate'}`);
+            setMessage(`Error: ${err || 'Failed to populate'}`);
         }
     };
 

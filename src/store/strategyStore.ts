@@ -1,3 +1,4 @@
+import { FormattedOrder } from '@/types/common';
 import {
     DistributionOffer,
     GlobalConfig,
@@ -6,7 +7,7 @@ import {
     RawKandelParams,
     ValidateParamsResult,
 } from '@mangrovedao/mgv';
-import { rpcOfferToHumanOffer } from '@mangrovedao/mgv/lib';
+import { rpcOfferToHumanOffer, type BA } from '@mangrovedao/mgv/lib';
 import { parseUnits } from 'viem';
 import { create } from 'zustand';
 
@@ -114,19 +115,21 @@ export const useStrategyStore = () => {
         };
     };
 
-    const getFormattedDistribution = (market: MarketParams) => {
+    const getFormattedDistribution = (
+        market: MarketParams | null
+    ): { formattedBids: FormattedOrder[]; formattedAsks: FormattedOrder[] } => {
         if (!store.validation?.distribution || !market) {
             return { formattedBids: [], formattedAsks: [] };
         }
 
         const { distribution } = store.validation;
 
-        const formatSide = (offers: DistributionOffer[], ba: 'bids' | 'asks') =>
+        const formatSide = (offers: DistributionOffer[], ba: 'bids' | 'asks'): FormattedOrder[] =>
             offers
                 .filter((o) => o.gives > 0n)
                 .map((o) => {
                     const { price, total } = rpcOfferToHumanOffer({
-                        ba,
+                        ba: ba as BA,
                         gives: o.gives,
                         tick: o.tick,
                         baseDecimals: market.base?.decimals,

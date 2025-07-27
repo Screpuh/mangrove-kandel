@@ -146,7 +146,7 @@ export function useMangrove() {
         }
     };
 
-    // Deposit ETH for gas provisions
+    // Deposit ETH for provisions
     // required for placing offers
     const fund = async () => {
         try {

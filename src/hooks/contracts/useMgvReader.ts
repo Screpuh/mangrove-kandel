@@ -34,7 +34,7 @@ export function useMgvReaderContract() {
             args: olKey ? [olKey, fromId, maxOffers] : undefined,
             query: {
                 enabled: enabled && !!olKey && !!readerAddress,
-                refetchInterval: 10000,
+                // refetchInterval: 10000,
                 //staleTime: 2000, // Consider data stale after 2 seconds
             },
         });

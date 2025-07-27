@@ -1,15 +1,14 @@
 'use client';
 
 import { useOfferListData } from '@/hooks/data/useMgvReaderData';
-import { useFormattedKandelOffers, useKandelStore } from '@/store/useKandelStore';
+import { useFormattedKandelOffers } from '@/store/useKandelStore';
 import { MarketParams } from '@mangrovedao/mgv';
 import { Eye, EyeOff, TrendingDown, TrendingUp, User } from 'lucide-react';
 import { useState } from 'react';
 
 export default function OrderbookComponent({ market }: { market: MarketParams }) {
     // get current order book data
-    const { bid, ask } = useOfferListData(market, 100n, true);
-    const { status, selected } = useKandelStore();
+    const { bid, ask } = useOfferListData(market, 100n);
     const { formattedBids, formattedAsks } = useFormattedKandelOffers(market);
     // add items to userOrders
     const userOrders = [...formattedBids, ...formattedAsks];
@@ -17,7 +16,7 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
     const [showUserOrders, setShowUserOrders] = useState(true);
 
     // Calculate cumulative volumes for depth
-    const calculateDepth = (orders, reverse = false) => {
+    const calculateDepth = (orders: number[][] | [number, number][], reverse = false) => {
         if (!orders || orders.length === 0) return [];
         let cumulative = 0;
         const withDepth = orders.map(([price, volume]) => {
@@ -28,16 +27,30 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
     };
 
     // Function to get user order at a specific price and type
-    const getUserOrderAtPrice = (price, type) => {
+    const getUserOrderAtPrice = (price: string, type: string) => {
         return userOrders.find((order) => order.price.toFixed(2) == price && order.type === type);
     };
 
     const bidsWithDepth = calculateDepth(bid.data);
     const asksWithDepth = calculateDepth(ask.data);
 
-    const formatPrice = (price) => price.toFixed(2);
-    const formatVolume = (volume) => volume.toFixed(2);
-    const formatTotal = (total) => total.toFixed(2);
+    const reduceLargeNumbers = (num: number) => {
+        if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+        if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+        return num.toFixed(2);
+    };
+
+    const formatPrice = (price: number) => {
+        return reduceLargeNumbers(price);
+    };
+
+    const formatVolume = (volume: number) => {
+        return reduceLargeNumbers(volume);
+    };
+
+    const formatTotal = (total: number) => {
+        return reduceLargeNumbers(total);
+    };
 
     // Get the spread
     const bestBid = Array.isArray(bid.data?.[0]) ? bid.data?.[0][0] : bid.data?.[0];

@@ -1,7 +1,7 @@
 import { useStrategyStore } from '@/store/strategyStore';
 import { useMarketStore } from '@/store/useMarketStore';
 import { useMarketConfig } from './useMgvReaderData';
-import { validateKandelParams } from '@mangrovedao/mgv';
+import { GlobalConfig, LocalConfig, validateKandelParams } from '@mangrovedao/mgv';
 
 export function useStrategyValidator() {
     const { formData, setValidation, convertToRawParams } = useStrategyStore();
@@ -18,9 +18,9 @@ export function useStrategyValidator() {
         try {
             // Convert human-readable form data to raw contract parameters
             const rawParams = convertToRawParams(formData, selectedMarket, {
-                asksLocalConfig: asks.local,
-                bidsLocalConfig: bids.local,
-                marketConfig: bids.global,
+                asksLocalConfig: asks?.local as LocalConfig,
+                bidsLocalConfig: bids?.local as LocalConfig,
+                marketConfig: bids?.global as GlobalConfig,
             });
 
             // Validate the raw parameters
@@ -32,7 +32,7 @@ export function useStrategyValidator() {
             console.error('Validation error:', error);
             const errorResult = {
                 success: false,
-                errors: [`Validation failed: ${error.message}`],
+                errors: [`Validation failed: ${error}`],
             };
             setValidation(null);
             return errorResult;

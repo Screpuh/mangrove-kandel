@@ -15,7 +15,10 @@ import { StrategyFormData } from '@/store/strategyStore';
 
 interface KandelStrategyConfiguratorProps {
     formData: StrategyFormData;
-    updateFormField: (field: keyof StrategyFormData, value: any) => void;
+    updateFormField: (
+        field: keyof StrategyFormData,
+        value: StrategyFormData[keyof StrategyFormData]
+    ) => void;
     market: MarketParams | null;
     result: ValidateParamsResult | null;
 }

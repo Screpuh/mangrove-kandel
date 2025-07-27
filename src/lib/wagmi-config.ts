@@ -1,5 +1,5 @@
 import { http, createConfig } from 'wagmi';
-import { base, foundry } from 'wagmi/chains';
+import { base, foundry, baseSepolia } from 'wagmi/chains';
 import { metaMask } from 'wagmi/connectors';
 
 const anvilLocal = {
@@ -32,6 +32,8 @@ const getCurrentChain = () => {
     switch (chainName) {
         case 'base':
             return base;
+        case 'base-sepolia':
+            return baseSepolia;
         case 'anvil':
         default:
             return anvilLocal;
@@ -42,7 +44,7 @@ const currentChain = getCurrentChain();
 
 export { chains, currentChain, anvilLocal };
 
-const chains = [anvilLocal, base] as const;
+const chains = [anvilLocal, base, baseSepolia] as const;
 
 export const WagmiConfig = createConfig({
     chains: chains,
@@ -50,6 +52,7 @@ export const WagmiConfig = createConfig({
     transports: {
         [anvilLocal.id]: http(),
         [base.id]: http(),
+        [baseSepolia.id]: http(),
     },
 });
 

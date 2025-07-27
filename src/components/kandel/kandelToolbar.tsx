@@ -2,7 +2,7 @@
 
 import { KandelEntry } from '@/store/useKandelStore';
 import { Button } from '../ui/button';
-import { useMarketStore, useSelectedMarket } from '@/store/useMarketStore';
+import { useMarketStore } from '@/store/useMarketStore';
 import { useCreateKandel } from '@/hooks/data/useKandelSeederData';
 
 interface KandelToolbarProps {
@@ -35,8 +35,10 @@ export default function KandelToolbar({ kandels, selected, onSelect }: KandelToo
             </Button>
             <select
                 className=" p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={selected}
-                onChange={(e) => onSelect(e.target.value)}>
+                value={selected ?? ''}
+                onChange={(e) => {
+                    onSelect(e.target.value as `0x${string}`);
+                }}>
                 {kandels.length === 0 ? (
                     <>
                         <option value="">No Kandels available</option>

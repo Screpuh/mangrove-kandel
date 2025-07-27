@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { useMarketStore } from '@/store/useMarketStore';
-import { ChevronDown, TrendingUp, Circle } from 'lucide-react';
+import { ChevronDown, TrendingUp } from 'lucide-react';
 import { useSelectedMarketBalances, useTokensData } from '@/hooks/data/useTokensData';
 import { useMarketsData } from '@/hooks/data/useMgvReaderData';
 import { useWallet } from '@/hooks/wallet/useWallet';
@@ -51,21 +51,22 @@ export default function MarketComponent() {
     }, [marketsTokensData]);
 
     // handle market selection on change
-    const handleSelectMarket = (event) => {
+    const handleSelectMarket = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedIndex = parseInt(event.target.value);
         if (selectedIndex >= 0 && selectedIndex < markets.length) {
             setMarket(markets[selectedIndex]);
         }
     };
 
-    const getCurrentMarketIndex = () => {
+    const getCurrentMarketIndex = (): number => {
         if (!selectedMarket) return -1;
-        return findMarketIndex(selectedMarket);
+        const idx = findMarketIndex(selectedMarket);
+        return typeof idx === 'number' && !isNaN(idx) ? idx : -1;
     };
 
     // fetch balances and allowances for selected market of this user
     const { baseBalance, quoteBalance, baseAllowance, quoteAllowance } = useSelectedMarketBalances(
-        userAddress,
+        userAddress ?? null,
         selectedMarket
     );
 

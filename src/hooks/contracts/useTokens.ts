@@ -13,16 +13,16 @@ export function useTokensContract() {
      * Get how many tokens an address owns
      * Usage: const { data: balance } = useTokenBalance(tokenAddress, userAddress)
      */
-    const useTokenBalance = (tokenAddress: Address, ownerAddress: Address | undefined) => {
+    const useTokenBalance = (tokenAddress: Address | undefined, ownerAddress: Address | null) => {
         return useReadContract({
-            address: tokenAddress,
+            address: tokenAddress ?? ('' as Address),
             abi: erc20Abi,
             functionName: 'balanceOf',
             args: [ownerAddress!],
             query: {
                 enabled: !!ownerAddress, // Only run query if ownerAddress exists
                 // Automatically refetch every 5 seconds to keep balance updated
-                refetchInterval: 5000,
+                // refetchInterval: 5000,
             },
         });
     };
@@ -67,18 +67,18 @@ export function useTokensContract() {
      * Check how much spender is allowed to spend from owner's tokens
      */
     const useTokenAllowance = (
-        tokenAddress: Address,
-        owner: Address | undefined,
-        spender: Address
+        tokenAddress: Address | undefined,
+        owner: Address | null,
+        spender: Address | undefined
     ) => {
         return useReadContract({
             address: tokenAddress,
             abi: erc20Abi,
             functionName: 'allowance',
-            args: [owner!, spender],
+            args: [owner!, spender!],
             query: {
                 enabled: !!owner,
-                refetchInterval: 10000,
+                // refetchInterval: 10000,
             },
         });
     };

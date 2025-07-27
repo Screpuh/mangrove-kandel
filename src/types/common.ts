@@ -26,3 +26,9 @@ export interface LocalUnpacked {
 }
 
 export type ConfigInfoResult = readonly [GlobalUnpacked, LocalUnpacked];
+
+export type FormattedOrder = {
+    price: number;
+    volume: number;
+    type: 'bids' | 'asks';
+};
