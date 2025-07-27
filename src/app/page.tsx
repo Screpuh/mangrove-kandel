@@ -1,103 +1,67 @@
-import Image from "next/image";
+'use client';
+import KandelComponent from '@/components/kandel/kandelComponent';
+import HeaderComponent from '@/components/layout/header';
+import MarketComponent from '@/components/market/marketComponent';
+import OrderbookComponent from '@/components/orderbook/orderbookComponent';
+import ConnectWallet from '@/components/wallet/connectWalletComponent';
+import { useMarketStore } from '@/store/useMarketStore';
+import { MarketParams } from '@mangrovedao/mgv';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const { selectedMarket: market }: { selectedMarket: MarketParams | null } = useMarketStore();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-200">
+            {/* Top Header */}
+            <HeaderComponent />
+
+            {/* Main Content */}
+            <main className="max-w-screen-xl mx-auto px-4 py-12">
+                <div className="bg-white rounded-2xl ring-1 ring-gray-200 shadow-2xl p-8">
+                    {/* Title + Market Selector */}
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-10 gap-4">
+                        <h1 className="text-4xl font-extrabold text-gray-900">
+                            Kandel Position Manager
+                        </h1>
+                    </div>
+
+                    {/* Market Selector */}
+                    <MarketComponent />
+
+                    {/* Grid Layout */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        {/* Kandel Management - 2/3 */}
+                        <div className="lg:col-span-8 space-y-6">
+                            <h2 className="text-2xl font-semibold text-gray-800">
+                                Kandel Management
+                            </h2>
+                            <ConnectWallet />
+
+                            {market && <KandelComponent />}
+                        </div>
+
+                        {/* Order Book - 1/3 */}
+                        <div className="lg:col-span-4 space-y-4">
+                            <h2 className="text-2xl font-semibold text-gray-800">Order Book</h2>
+                            {market ? (
+                                <OrderbookComponent market={market} />
+                            ) : (
+                                <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 min-h-96 shadow-inner flex items-center justify-center text-gray-400 text-lg">
+                                    Select a market to view the order book.
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Full Width Section */}
+                        {/* <div className="lg:col-span-12 space-y-4 pt-6 border-t">
+                            <h2 className="text-2xl font-semibold text-gray-800">Positions</h2>
+                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 min-h-96 shadow-inner flex items-center justify-center text-gray-400 text-lg">
+                                No positions yet.
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+            </main>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
