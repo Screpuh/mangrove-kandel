@@ -54,7 +54,6 @@ export default function KandelStrategyConfigurator({
 
     const handleValidateClick = async () => {
         const result = await validate();
-        console.log('Validation result:', result);
         // Optionally show a toast or visual feedback here
     };
 

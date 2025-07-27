@@ -22,7 +22,6 @@ export const useCreateKandel = () => {
             sowKandel(olKey, false, (kandelAddress) => {
                 const marketId = `${market.base.symbol}/${market.quote.symbol}`;
                 addKandel({ address: kandelAddress, marketId });
-                console.log('✅ Kandel created:', kandelAddress);
             });
         },
         [sowKandel, addKandel]

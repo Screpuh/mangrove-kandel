@@ -9,21 +9,18 @@ export const KandelOrderPreviewTable = ({
     bids: { price: number; volume: number; type: BA }[];
     market: any;
 }) => (
-    console.log('KandelOrderPreviewTable', { asks, bids, market }),
-    (
-        <div className="mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    <p>Asks: ({asks.length})</p>
-                    <OrderTable offers={asks} market={market} />
-                </div>
-                <div>
-                    <p>Bids: ({bids.length})</p>
-                    <OrderTable offers={bids} market={market} />
-                </div>
+    <div className="mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <p>Asks: ({asks.length})</p>
+                <OrderTable offers={asks} market={market} />
+            </div>
+            <div>
+                <p>Bids: ({bids.length})</p>
+                <OrderTable offers={bids} market={market} />
             </div>
         </div>
-    )
+    </div>
 );
 
 export const OrderTable = ({

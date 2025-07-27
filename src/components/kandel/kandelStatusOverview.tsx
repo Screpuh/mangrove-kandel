@@ -7,7 +7,6 @@ import { KandelOrderPreviewTable } from './kandelOrderPreviewTable';
 import { useMangrove } from '@/hooks/contracts/useMangrove';
 import { useFormattedKandelOffers, useKandelStore } from '@/store/useKandelStore';
 import { useTokensContract } from '@/hooks/contracts/useTokens';
-import useKandelManager from '@/hooks/managers/useKandelManager';
 
 export default function KandelStatusOverview({
     status,
@@ -26,7 +25,6 @@ export default function KandelStatusOverview({
     ) => void;
 }) {
     const { selected } = useKandelStore();
-    console.log('Kandel', status);
     const { approveTokens } = useTokensContract();
     const { formattedBids, formattedAsks } = useFormattedKandelOffers(market);
 

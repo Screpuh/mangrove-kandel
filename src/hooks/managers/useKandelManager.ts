@@ -50,7 +50,6 @@ export default function useKandelManager(market: MarketParams) {
     const getKandelState = useCallback(
         async (kandelAddress: `0x${string}`) => {
             const kandel = connectToKandel(kandelAddress);
-            console.log('Fetching Kandel state for:', kandelAddress);
             const kandelState: GetKandelStateResult = await kandel.getKandelState({
                 pricePoints: 100,
             } as GetKandelStateArgs);
