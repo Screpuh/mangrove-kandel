@@ -9,6 +9,7 @@ Mangrove is a decentralized, orderbook-based exchange, enabling dynamic, conditi
 A key innovation is that Mangrove offers are a promise to trade and not a locked commitment, allowing funds to be used while in order. This allows users to for example to provide liquidity on other exchanges and use this LP'd liquidity at the same time to trade or run strategies.
 
 **What are smart offers?**
+
 Smart offers are limit orders that allow attaching custom smart contract logic. This gives users extra options when trading:
 
 - Reactive liquidity -> with reactive liquidity, funds are not locked when placed as offers, allowing simultaneous use in other DeFi protocols like Aave.
@@ -21,6 +22,7 @@ Smart offers use two callback function that are triggered when an order is hit.
 - `makerPostHook` – runs after the offer is executed.
 
 **Ticks, ratios, and prices**
+
 To prevent working with floats on chain and have faster and cheaper calculations Mangrove represents prices as ratios on a grid of ticks. So instead of having an infinite price space, Mangrove snaps prices to a grid. Each step is called a tick. A tick is an element of all integers.
 
 Tick 0 = ratio =1
@@ -83,9 +85,11 @@ Market orders on mangrove are not like traditional market orders. Because it's o
 A provision is an amount of native tokens (like ETH on Base) that compensates takers when offers fail to execute properly. When creating an offer, a provision in the native token is locked as a guarantee. If the offer executes successfully, the provision is returned to the maker. If the offer fails, part or all of the provision is given as a bounty to the taker.
 
 **What are bounties?**
+
 To prevent makers from creating a lot of orders (spamming) that are never meant to be filled, every order must leave a native token provision (the bounty). When an order is hit, but the smart contract prevents the order to be filled the taker is compensated with the bounty.
 
 **Makers, Takers, and Keepers**
+
 Makers provide liquidity by placing limit orders with a defined price, quantity, and optional smart conditions.
 
 Takers are the people that take trades from makers. They can use limit and market orders. When using market order mangrove tries to fill for the best price by checking all smart contracts. If a contract fails the taker is compensate with the bounty and the order fill continues with the next best price.
@@ -120,7 +124,7 @@ So how can we think in terms of profit from our Kandel strategy?
 
 Profit is made from capturing the spread between our buys and sells. (we basically want to sell high and buy low ;p)
 
-Our profit is the difference between our buy and sell prices (minus fees of course)
+Our profit is the difference between our buy and sell prices (minus fees of course).
 
 Let's say after one day of trading we went from 10 ETH and 30,000 USD to 9.5 ETH and 31500USD. The question is did we actually make any money?
 
