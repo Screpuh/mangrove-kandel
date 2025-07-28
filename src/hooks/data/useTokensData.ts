@@ -9,6 +9,9 @@ import { getContractAddresses } from '@/lib/wagmi-config';
 export function useTokensData() {
     const { useTokensInfo } = useTokensContract();
 
+    // Fetch token info for all markets
+    // The raw token market data is just the addresses of the tokens
+    // This hook will return the formatted MarketParams with token info using a batch call for each token
     const useMarketsTokensInfoData = (markets: GetOpenMarketRawResult) => {
         const allTokenAddresses = useMemo(() => {
             const addresses: Address[] = [];

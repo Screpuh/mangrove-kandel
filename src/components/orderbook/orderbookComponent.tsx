@@ -1,6 +1,7 @@
 'use client';
 
 import { useOfferListData } from '@/hooks/data/useMgvReaderData';
+import { formatNumber } from '@/lib/utils';
 import { useFormattedKandelOffers } from '@/store/useKandelStore';
 import { MarketParams } from '@mangrovedao/mgv';
 import { Eye, EyeOff, TrendingDown, TrendingUp, User } from 'lucide-react';
@@ -28,29 +29,13 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
 
     // Function to get user order at a specific price and type
     const getUserOrderAtPrice = (price: string, type: string) => {
-        return userOrders.find((order) => order.price.toFixed(2) == price && order.type === type);
+        return userOrders.find(
+            (order) => formatNumber(order.price) == price && order.type === type
+        );
     };
 
     const bidsWithDepth = calculateDepth(bid.data);
     const asksWithDepth = calculateDepth(ask.data);
-
-    const reduceLargeNumbers = (num: number) => {
-        if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
-        if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
-        return num.toFixed(2);
-    };
-
-    const formatPrice = (price: number) => {
-        return reduceLargeNumbers(price);
-    };
-
-    const formatVolume = (volume: number) => {
-        return reduceLargeNumbers(volume);
-    };
-
-    const formatTotal = (total: number) => {
-        return reduceLargeNumbers(total);
-    };
 
     // Get the spread
     const bestBid = Array.isArray(bid.data?.[0]) ? bid.data?.[0][0] : bid.data?.[0];
@@ -85,7 +70,7 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
                         <div className="text-sm text-gray-600">
                             Spread:{' '}
                             <span className="font-medium text-gray-900">
-                                {formatPrice(spread)} ({spreadPercent}%)
+                                {formatNumber(spread)} ({spreadPercent}%)
                             </span>
                         </div>
                     </div>
@@ -114,7 +99,7 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
                             .reverse()
                             .map(([price, volume, total], index) => {
                                 const userOrder = showUserOrders
-                                    ? getUserOrderAtPrice(price.toFixed(2), 'asks')
+                                    ? getUserOrderAtPrice(formatNumber(price), 'asks')
                                     : null;
                                 return (
                                     <div
@@ -129,18 +114,18 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
                                                 userOrder ? 'text-blue-700' : 'text-red-600'
                                             }`}>
                                             {userOrder && <User className="w-3 h-3" />}
-                                            {formatPrice(price)}
+                                            {formatNumber(price)}
                                         </div>
                                         <div className="relative text-sm text-gray-700 text-right font-mono">
-                                            {formatVolume(volume)}
+                                            {formatNumber(volume)}
                                             {userOrder && (
                                                 <span className="text-blue-600 font-medium ml-1">
-                                                    (+{formatVolume(userOrder.volume)})
+                                                    (+{formatNumber(userOrder.volume)})
                                                 </span>
                                             )}
                                         </div>
                                         <div className="relative text-sm text-gray-600 text-right font-mono">
-                                            {formatTotal(total)}
+                                            {formatNumber(total)}
                                         </div>
                                     </div>
                                 );
@@ -155,7 +140,7 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
                         <div className="bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm">
                             <span className="text-gray-600">Spread: </span>
                             <span className="font-semibold text-gray-900">
-                                {formatPrice(spread)}
+                                {formatNumber(spread)}
                             </span>
                         </div>
                         <div className="h-px bg-gray-300 flex-1"></div>
@@ -171,7 +156,7 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
                     <div className="space-y-1">
                         {bidsWithDepth.map(([price, volume, total], index) => {
                             const userOrder = showUserOrders
-                                ? getUserOrderAtPrice(price.toFixed(2), 'bids')
+                                ? getUserOrderAtPrice(formatNumber(price), 'bids')
                                 : null;
                             return (
                                 <div
@@ -186,18 +171,18 @@ export default function OrderbookComponent({ market }: { market: MarketParams })
                                             userOrder ? 'text-blue-700' : 'text-green-600'
                                         }`}>
                                         {userOrder && <User className="w-3 h-3" />}
-                                        {formatPrice(price)}
+                                        {formatNumber(price)}
                                     </div>
                                     <div className="relative text-sm text-gray-700 text-right font-mono">
-                                        {formatVolume(volume)}
+                                        {formatNumber(volume)}
                                         {userOrder && (
                                             <span className="text-blue-600 font-medium ml-1">
-                                                (+{formatVolume(userOrder.volume)})
+                                                (+{formatNumber(userOrder.volume)})
                                             </span>
                                         )}
                                     </div>
                                     <div className="relative text-sm text-gray-600 text-right font-mono">
-                                        {formatTotal(total)}
+                                        {formatNumber(total)}
                                     </div>
                                 </div>
                             );

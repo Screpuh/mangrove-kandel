@@ -1,6 +1,6 @@
+import { formatNumber } from '@/lib/utils';
 import { FormattedOrder } from '@/types/common';
 import { MarketParams } from '@mangrovedao/mgv';
-import { BA } from '@mangrovedao/mgv/lib';
 
 export const KandelOrderPreviewTable = ({
     asks,
@@ -25,9 +25,6 @@ export const KandelOrderPreviewTable = ({
 );
 
 export const OrderTable = ({ offers }: { offers: FormattedOrder[] }) => {
-    const formatPrice = (price: number) => price.toFixed(2);
-    const formatVolume = (volume: number) => volume.toFixed(2);
-
     return (
         <div>
             <div className="space-y-2">
@@ -47,11 +44,11 @@ export const OrderTable = ({ offers }: { offers: FormattedOrder[] }) => {
                                     {order.type === 'bids' ? 'BUY' : 'SELL'}
                                 </span>
                                 <span className="font-medium text-gray-900">
-                                    {formatPrice(order.price)}
+                                    {formatNumber(order.price)}
                                 </span>
                             </div>
                             <div className="flex items-center gap-4 text-gray-600">
-                                <span className="font-mono">{formatVolume(order.volume)}</span>
+                                <span className="font-mono">{formatNumber(order.volume)}</span>
                             </div>
                         </div>
                     );
@@ -62,7 +59,7 @@ export const OrderTable = ({ offers }: { offers: FormattedOrder[] }) => {
                 <div className="flex justify-between">
                     <span>Total Value:</span>
                     <span className="font-medium text-gray-900">
-                        {formatPrice(offers.reduce((sum, order) => sum + order.volume, 0))}
+                        {formatNumber(offers.reduce((sum, order) => sum + order.volume, 0))}
                     </span>
                 </div>
             </div>

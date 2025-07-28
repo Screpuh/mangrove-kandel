@@ -43,17 +43,41 @@ export const formatTokenFromContractResults = (
     } as Token;
 };
 
+const cashnesses: Record<string, number> = {
+    USDC: 100,
+    EURC: 99,
+
+    WETH: 50,
+    ETH: 50,
+    cbBTC: 49,
+    cbETH: 40,
+    wstETH: 39,
+    superOETHb: 20,
+
+    PRL: 10,
+};
+
+const getCashness = (symbol: string): number => {
+    // return cashness based on symbol or default to 0
+    return cashnesses[symbol] ?? 0;
+};
+
 export const formatMarketsToMarketParams = (
     markets: GetOpenMarketRawResult,
     tokens: Token[]
 ): MarketParams[] => {
     return markets.map((market, index) => {
-        const quoteToken = tokens[index * 2]; // tkn0
-        const baseToken = tokens[index * 2 + 1]; // tkn1
+        const tkn0 = tokens[index * 2]; // tkn0
+        const tkn1 = tokens[index * 2 + 1]; // tkn1
+
+        // we can use cashness to determine the "cash-like" nature of the token
+        // Tokens with higher cashness will be quote tokens, lower cashness will be base tokens.
+        const cashness0 = getCashness(tkn0.symbol);
+        const cashness1 = getCashness(tkn1.symbol);
 
         return {
-            base: baseToken,
-            quote: quoteToken,
+            base: cashness0 > cashness1 ? tkn1 : tkn0,
+            quote: cashness0 > cashness1 ? tkn0 : tkn1,
             tickSpacing: market.tickSpacing,
         };
     });
